@@ -2472,3 +2472,790 @@ int main(void)
 #endif
 // 이어서 작성하기
 
+//04月14日(月)
+/***********************************************************/
+// [9-1] 변수의 메모리 주소 확인
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int a; // 4byte 정수형 메모리
+	double b; // 8byte 실수형 메모리 
+	char c; // 1byte 문자형 메모리
+
+	printf("int형 변수의 주소 : %p\n", &a);
+	printf("double 형 변수의 주소 : %p\n", &b);
+	printf("char 형 변수의 주소 : %p\n", &c);
+	// &p 주소값 16진수 출력
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [9-2] 포인터 선언과 사용
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int a; // 변수선언
+	int *pa; // 포인터의 선언
+
+	pa = &a; // a의 주소값을 포인터 pa에 담겠다.
+
+	printf("pa에 들어 있는 값 : %d\n", pa);
+	a = 10;
+	printf("a에 들어 있는 값 : %d\n", a);
+
+	*pa = 20; // * : 간접 참조 연산자 변수에 할당하는것 처럼 쓸 수 있음
+	printf("a에 들어있는 값 : %d\n", a);
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [9-3] 포인터를 사용한 두 정수의 합과 평균 계산
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int a = 10, b = 15, total; // a와 b의 총합
+	int *pa, *pb; // 각각 a와 b를 가리키는 포인터
+	int *pt; // total을 가리키는 포인터
+	double avg = 0; // a와 b의 평균
+	double *pg; // avg를 가리키는 포인터
+
+	// 1. pa, pb, pt, pg를 각각 초기화!!
+	pa = &a;
+	pb = &b;
+	pt = &total;
+	pg = &avg;
+	// 2. 간접 참조 연산자 *를 활용하여 total에 a + b를 대입
+	*pt = a + b;
+	// 3. 간접 참조 연산자 *를 활용하여 avg에 a와 b의 평균을 대입
+	*pg = (double)total / 2; // *pt / 2; 도 가능
+	
+
+	printf("두 정수의 값 : %d, %d\n", a, b);
+	printf("두 정수의 총합 : %d\n", total);
+	printf("두 정수의 평균 : %.1lf\n", avg);
+}
+#endif
+
+/***********************************************************/
+// [9-4] 포인터에 const 사용
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	const int num = 10; //const 붙은 변수는 선언과 동시에 초기화 필요
+	int a = 10, b = 20;
+	const int *pa = &a;
+	printf("a의 값 : %d\n", *pa);
+	
+	pa = &b; // pa가 b의 주소를 가르킨다.
+	printf("b의 값 ; %d\n", *pa);
+
+	pa = &a;
+	a = 7;
+	printf("a의 값 ; %d\n", *pa);
+
+	// const로 포인터 설정 시 간접 참조 불가능
+	//*pa = 77; 
+	//printf("a의 값 ; %d\n", *pa); 
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [9-5] 주소와 포인터의 크기
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	// sizeof연산자 : sizeof(피연산자) : 피연산자의 데이터 크기 byte로 반환
+	int a;
+	double b;
+	char c;
+
+	// 포인터는 반드시 변수와 데이터 자료형 일치해야함
+	int* pa = &a;
+	double* pb = &b;
+	char* pc = &c;
+
+	// 주소의 크기
+	printf("a주소 : %d, b주소 :  %d, c주소:  %d\n", sizeof(&a), sizeof(&b), sizeof(&c));
+	// 포인터의 크기
+	printf("a포인터 : %d, b포인터 :  %d, c포인터:  %d\n", sizeof(pa), sizeof(pb), sizeof(pc));
+	// 포인터가 가르키는 변수의 크기
+	printf("a값 : %d, b값 :  %d, c값:  %d\n", sizeof(*pa), sizeof(*pb), sizeof(*pc));
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [9-6] 허용되지 않는 포인터의 대입
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int a = 10;
+	int* pa = &a;
+	double* pd;
+
+	// pa는 a를 가리키는 int형 포인터
+	// pd는 double형을 가리킬 수 있는 포인터
+
+	pd = pa; // a의 주소를 가리킬 수 있게 pd에 대입
+	// 주의! 형 변환처럼 사용 시 주소 범위 확인 필요
+
+	printf("%lf\n", *pd);
+
+	int* pb;
+	pb = pa;
+	printf("%d\n", *pa);
+	printf("%d\n", *pb);
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [9-7] 포인터를 사용한 두 변수의 값 교환
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void swap(int* pa, int* pb);
+
+int main(void)
+{
+	int a = 10, b = 20;
+	// 두 값을 치환(swap) 후 출력
+	//printf("%d, %d\n", a, b); // 20, 10
+
+	//int temp;
+	//temp = a;
+	//a = b;
+	//b = temp;
+
+	printf("a : %d, b: %d\n", a, b);
+	
+	swap(&a, &b); //a와 b의 주소를 넘겨야함
+
+	printf("a : %d, b: %d\n", a, b);
+
+	return 0;
+}
+
+// 두 값을 치환하는 함수
+void swap(int* pa, int* pb)
+{
+	// pa -> a의 주소값, 즉, a를 가리킨다.
+	// pb -> b의 주소값, 즉, b를 가리킨다.
+
+	int temp;
+	temp = *pa; // 변수 a,b 를 쓰지 못하지만 주소를 통해 찾아갈 수 있음
+	*pa = *pb;
+	*pb = temp;
+}
+#endif
+
+/***********************************************************/
+// [9-8, 9] 다른 함수의 변수 사용하기 8
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void swap(int a, int b);
+
+int main(void)
+{
+	int a = 10, b = 20;
+	printf("a : %d, b: %d\n", a, b);
+
+	swap(a, b); // 직접 값으로 스왑하면 안되나?
+	printf("a : %d, b: %d\n", a, b); // ㅇㅇ 안됨
+	// 직접 메모리를 참조한 값 교환이 아니기 때문에 주소 포인터를 이용하여 교환 해야함
+	return 0;
+}
+void swap(int a, int b)
+{
+	int temp;
+	temp = a;
+	a = b;
+	b = temp;
+}
+
+#endif
+
+/***********************************************************/
+// [9-8, 9] 다른 함수의 변수 사용하기 9?????
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void swap(int a, int b);
+
+int main(void)
+{
+	int a = 10, b = 20;
+	printf("a : %d, b: %d\n", a, b);
+
+	swap(a, b); // 직접 값으로 스왑하면 안되나?
+	printf("a : %d, b: %d\n", a, b); // ㅇㅇ 안됨
+	// 직접 메모리를 참조한 값 교환이 아니기 때문에 주소 포인터를 이용하여 교환 해야함
+	return 0;
+}
+void swap(int a, int b)
+{
+	int temp;
+	temp = a;
+	a = b;
+	b = temp;
+}
+
+#endif
+
+/***********************************************************/
+// [9-도전] 미니 정렬 프로그램
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void swap(int* pa, int* pb);
+void descending(int* max, int* mid, int* min);
+
+int main(void)
+{
+	// 세 개의 정수 입력
+	int max, mid, min;
+	scanf("%d %d %d", &max, &mid, &min); // 10 20 30 엔터
+
+	// 값 3개 넘길 시
+	// 가장 큰 값을 max
+	// 중간 값을 mid
+	// 가장 작은 값을 min으로 바꾸는 함수
+	descending(&max, &mid, &min);
+
+	printf("%d %d %d\n", max, mid, min); // 30 20 10 출력
+
+	return 0;
+}
+// 두 값을 치환하는 함수 swap()
+void swap(int* pa, int* pb)
+{
+	int temp;
+	temp = *pa;
+	*pa = *pb;
+	*pb = temp;
+}
+void descending(int* max, int* mid, int* min)
+{
+	// max, mid, min
+	// 가장 작은 값을 오른쪽으로 보내거나
+	// 1. max, min비교 후 max가 더 작으면 치환
+	// 2. mid, min비교 후 mid가 더 작으면 치환
+	// 3. max, mid 비교 후 max가 더 작으면 치환
+	
+	// 가장 큰 값을 왼쪽으로 보내거나
+	// 생략
+
+	if (*max < *mid)
+	{
+		swap(max, mid);
+	}
+	if (*mid < *min)
+	{
+		swap(mid, min);
+	}
+	if (*max < *mid)
+	{
+		swap(max, mid);
+	}
+	
+	//// max, mid, min
+ //   // 가장 작은 값을 오른쪽으로 보내거나
+ //   // 1. max, mid비교 후 max가 더 작으면 치환
+	//if (*max < *mid) swap(max, mid);
+	//// 2. mid, min비교 후 mid가 더 작으면 치환
+	//if (*mid < *min) swap(mid, min);
+	//// 3. max, mid비교 후 max가 더 작으면 치환
+	//if (*max < *mid) swap(max, mid);
+}
+
+#endif
+
+/***********************************************************/
+// [10-1] 배열며에 정수 연산을 수행해 배열 요소 사용
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int ary[3]; //3칸 짜리 int형 배열 선언
+
+	printf("%d\n", ary);
+
+	printf("%d\n", &ary[0]);
+
+	printf("%d\n", (ary + 1));
+
+	ary[0] = 10;
+
+	*(ary + 1) = 20;
+	// *(ary + 3) = 20; <- 범위 벗어난 주소 사용 금지!!!!!!!
+
+	for (int i = 0; i < 3; i++)
+	{
+		printf("%d 번째 요소 : %d\n", (i + 1), ary[i]);
+	}
+	
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [10-2] 배열명 처럼 사용되는 포인터
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int ary[3];
+	int* pa = &ary;
+
+	*pa = 10;
+	// 20을 배열 두 번재 요소(인덱스 1)에 할당!
+	//ary[1] = 20;
+	//*(ary + 1) = 20;
+	//*(pa + 1) = 20;
+	pa++;
+	*pa = 20;
+
+	pa++;
+	*pa = 30;
+	// 반복문 활용 가능
+
+
+	for (int i = 0; i < 3; i++)
+	{
+		printf("%d번째 요소 : %d\n", i + 1, ary[i]);
+	}
+
+	printf("배열 전체의 길이 : %d\n", sizeof(ary));
+	printf("포인터 하나의 길이 : %d\n", sizeof(pa)); //컴파일러 따라 4나올수도
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [10-3] 포인터를 이용한 배열의 값 출력
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int ary[3] = { 10,20,30 };
+	int* pa = ary;
+
+	printf("배열의 값 : ");
+	for (int i = 0; i < 3; i++)
+	{
+		printf("%d ", *pa);
+		
+		// 후위니까 사용하고 증가시킴
+		pa++;
+		//++pa <- intdex1, index2, index? -> 3번 인덱스가 없어서 문제가 생길 수 있다.
+		// 전위 증감은 쓰지마라~~!!!
+		
+		// pa는 첫번재 배열 요소의 주소를 가리키고 있다. 
+		// *pa 는 가리키는 요소의 값을 보고있다. 
+	}
+	// 그럼에도 불구하고 후위 증감 연산자 사용 시!!!!
+	// 주소 값의 범위를 확인 하여 범위를 벗어났는지 체크할것!!!!!!
+	// 걍 전위 쓰지 마라
+	printf("\n", *pa);
+
+	pa = ary; // 재할당 후 다시 사용 가능
+	for (int i = 0; i < 3; i++)
+	{
+		printf("%d ", *pa);
+		pa++;
+	}
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [10-4] 포인터의 뺄셈과 관계 연산
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int ary[5] = { 20,20,30,40,50 };
+	int* pa = ary;
+	int* pb = ary + 3;
+
+	// print *pa -> 10
+	// print *pb -> 40
+
+	pa++;
+	printf("pb-pa : %u\n", pb - pa); //2칸 차이나고 있다~
+
+	// 두 포인트 중
+	// 더 앞에 있는(인덱스가 작은) 요소 출력!!
+
+	if (pa < pb)
+	{
+		printf("%d\n", *pa);
+	}
+	else
+	{
+		printf("%d\n", *pb);
+	}
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [10-5] 배열을 처리하는 함수
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void print_ary(int* pa)
+
+int main(void)
+{
+	int ary[5] = { 10,20,30,40,50 };
+	print_ary(ary);
+
+	return 0;
+}
+
+void print_ary(int* pa)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		printf("%d ", pa[i]);
+	}
+}
+#endif
+
+/***********************************************************/
+// [10-6] 크기가 다른 배열을 처리하는 함수
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void print_ary(int* pa, int size);
+
+int main(void)
+{
+	int ary[5] = { 10,20,30,40,50 };
+	int ary2[7] = { 10,20,30,40,50,60,70 };
+
+	print_ary(ary, 5);
+	print_ary(ary2, 7);
+
+	return 0;
+}
+
+
+void print_ary(int* pa, int size)
+{ 
+	// 배열의 주소를 담고 있는 포인터 pa를 활용하여
+	// 모든 배열의 요소를
+	// 예) 10 20 30 40 50으로 출력
+	 
+	
+	//void print_ary(int* pa)
+	//int size = pa; <- c언어에서 포인터만 가지고 배열의 크기를 볼 수 있는 방법 없음
+
+	for (int i = 0; i < size; i++)
+	{
+		printf("%d ", pa[i]);
+	}
+	printf("\n");
+}
+#endif
+
+/***********************************************************/
+// [10-7] 배열의 값을 입력하는 함수
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void input_ary(int* pa, int size);
+void find_max(int* pa, int size);
+void print_ary(int ary[], int size);
+
+int main(void)
+{
+	// 1. 배열에 값을 입력하는 input_ary()
+	// input_ary(ary, 5);
+	// 총 5번의 입력 발동
+	// 예0 10 20 30 40 50이 들어오면
+	// ary[0] = 10,... ary[4] = 50
+	int ary[5];
+	input_ary(ary, sizeof(ary) / sizeof(int)); //5대신 sizeof(ary) / sizeof(int)
+
+	print_ary(ary, 5);
+
+	// 배열의 최댓값을 찾아 출력하는 함수
+	// find_max(ary, 5)
+	// 배열의 최댓값 : 50
+	find_max(ary, 5);
+
+	
+	
+	
+	return 0;
+}
+
+void input_ary(int *pa, int size)
+{
+	printf("정수 5개 입력 : ");
+   // 총 5번의 입력 값을 pa에 대입!!
+   for (int i = 0; i < size; i++)
+   {
+      scanf("%d", &pa[i]);
+   }
+}
+void find_max(int* pa, int size)
+{
+	int max = pa[0];// 배열의 첫 요소를 값으로 정해주자
+
+	for (int i = 0; i < size; i++)
+	{
+		if (pa[i] > max)
+		{
+			max = pa[i];
+		}
+	}
+	printf("배열의 최댓값 : %d\n", max);
+}
+
+void print_ary(int ary[], int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		printf("%d ", ary[i]);
+	}
+	printf("\n");
+}
+
+#endif
+
+/***********************************************************/
+// [10-도전] 로또 번호 생성 프로그램
+/***********************************************************/
+
+#if 0
+#include <stdio.h>  
+#include <time.h>   // time()
+#include <stdlib.h> // rand(), srand()
+
+void print_lotto(int* pa, int size);
+void input_lotto(int* pa, int size);
+
+int main(void)
+{
+	// 도전 문제 : 6개의 정수를 입력 ( 1 ~ 45 )
+	int lotto[6];
+
+	input_lotto(lotto, 6);
+	print_lotto(lotto, 6);
+
+	return 0;
+}
+void input_lotto(int* pa, int size)
+{
+	srand(time(NULL)); // 현재 시각을 통해 시드 랜덤!!
+	for (int i = 0; i < size; i++)
+	{
+		// pa[i] = 랜덤으로 1 ~ 45까지 추출
+		pa[i] = rand() % 45 + 1;
+		// 로또 번호 입력 로직 시작
+		/*printf("%d번째 로또 번호 입력 : ", (i + 1));
+		scanf("%d", &pa[i]);*/
+		// 로또 번호 입력 로직 끝
+
+		for (int j = 0; j < i; j++)
+		{
+			// pa[3]은 pa[0], pa[1], pa[2]
+			if (pa[i] == pa[j])
+			{
+				printf("중복입니다\n");
+				// 다시 뽑는 로직!!
+				// 현재 상황에서는
+				// pa[i + 1]을 뽑게 됨
+				// 왜? 증감식에 i++
+				i--;
+				break;
+			}
+		}
+	}
+}
+
+void print_lotto(int* pa, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		printf("%d ", pa[i]);
+	}
+	printf("\n");
+}
+
+#endif
+
+/***********************************************************/
+// [10-정렬] 정렬 알고리즘
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void print_array(int* pa, int size);
+void bubble_sort(int* pa, int size);
+void swap(int* pa, int* pb);
+void selecton_sort(int* pa, int size);
+void binary_search(int* pa, int size, int search);
+
+int main(void)
+{
+	int array[10] = { 1, 32, 19, 27, 23, 20, 15, 96, 25, 37 };
+	int size = sizeof(array) / sizeof(int); // 10
+	printf("배열 원본 : ");
+	print_array(array, size); // 1 32 19 27 23
+	//bubble_sort(array, size); // 버블정렬(오름차순)
+	//printf("버블 정렬 후 : ");
+	//print_array(array, size); // 1 19 23 27 32
+	selecton_sort(array, size); // 선택정렬(오름차순)
+	printf("선택 정렬 후 : ");
+	print_array(array, size); //  1 15 19 20 23 25 27 32 37 96
+	int search = 19;
+	binary_search(array, size, search); // 찾고자 하는 23은 index 3에 있습니다
+
+	return 0;
+}
+void print_array(int* pa, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		printf("%d ", pa[i]);
+	}
+	printf("\n");
+}
+void swap(int* pa, int* pb)
+{
+	int temp;
+	temp = *pa;
+	*pa = *pb;
+	*pb = temp;
+}
+void bubble_sort(int* pa, int size)
+{
+	for (int j = size - 1; j > 0; j--)
+	{
+		for (int i = 0; i < j; i++)
+		{
+			if (pa[i] > pa[i + 1]) swap(&pa[i], &pa[i + 1]);
+		}
+	}
+}
+void selecton_sort(int* pa, int size)
+{
+	// 선택정렬
+	// 버블정렬의 단점을 보완
+	// cycle당 최대 치환 1번
+	// 1 32 19 27 23
+	int max;
+	int max_index;
+	for (int j = 0; j < size - 1; j++)
+	{
+		max = pa[0];
+		max_index = 0;
+		for (int i = 0; i < size - j; i++)
+		{
+			if (pa[i] > max)
+			{
+				max = pa[i];
+				max_index = i;
+			}
+		}
+		swap(&pa[max_index], &pa[size - (j + 1)]);
+	}
+}
+void binary_search(int* pa, int size, int search)
+{
+	// 이진탐색
+	int low_index = 0; // 0
+	int high_index = size - 1; // 9
+	int mid_index = (low_index + high_index) / 2; // 4
+
+	while (1)
+	{
+		// 23       >      19
+		if (pa[mid_index] > search)
+		{
+			// low_index는 그대로
+			high_index = mid_index - 1;
+			mid_index = (low_index + high_index) / 2;
+		}
+		else if (pa[mid_index] < search)
+		{
+			// high_index는 그대로
+			low_index = mid_index + 1;
+			mid_index = (low_index + high_index) / 2;
+		}
+		else
+		{
+			printf("찾고자 하는 %d은 index %d에 있습니다", search, mid_index);
+			break;
+		}
+	}
+}
+
+
+#endif
