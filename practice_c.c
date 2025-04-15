@@ -3272,30 +3272,21 @@ char lowercase(char ch);
 
 int main(void)
 {
-	printf("%c\n", lowercase('H'));
+    printf("%c\n", lowercase('H')); // h
 
-	return 0;
+    return 0;
 }
 
 char lowercase(char ch)
 {
-	char result;
-
-	if (ch >= 'A' && ch <= 'a') //대문자 일때만 바뀌는 로직
-	{
-		ch += 32;
-		//ch = ch + ('a' - 'A');
-	}
-	else //대문자 아닌 경우 본래 문자 반환
-	{
-		return ch;
-	}
-	
-	result = ch;
-
-
-	return result;
+    // 대문자가 아닌 경우 본래 문자 반환!!
+    if (ch < 'A' || ch > 'Z')
+    {
+        return ch;
+    }
+    return ch + ('a' - 'A');
 }
+
 #endif
 
 /***********************************************************/
@@ -3307,26 +3298,63 @@ char lowercase(char ch)
 
 int main(void)
 {
-	//Hello wolrd!! 입력받자
-	while (1)
-	{
-		char ch;
-		// scanf -> 문자,문자열,정수,실수 입력 가능
-		// 문자 : 1byte, 정수,실수 : 4, 8byte
-		// 문자 전용 함수로 버퍼를 좀 작게 사용하는 getchar,putchar
-		scanf("%c", &ch);
+    // Hello World!! 입력받자
+    while (1)
+    {
+        char ch;
+        // scanf -> 문자 입력!! 문자열!! 정수!! 실수!!
+        // 문자 : 1byte, 정수, 실수 -> 4, 8byte
+        // 문자 전용 함수!!
+        scanf("%c", &ch);
+        if (ch == 10) break;
+        printf("%c", ch);
+    }
+    printf("\n");
 
-		if (ch == '10') break; // 엔터 입력 시 break
-		printf("%c", ch);
-	}
-
-	return 0;
-
+    while (1)
+    {
+        char ch;
+        // scanf -> 문자 입력!! 문자열!! 정수!! 실수!!
+        // 문자 : 1byte, 정수, 실수 -> 4, 8byte
+        // 문자 전용 함수!!
+        scanf("%c", &ch);
+        if (ch == 10) break;
+        printf("%c", ch);
+    }
+    return 0;
 }
 #endif
 
 /***********************************************************/
-// [11-3] getchar 함수와 putchar 함수 사용
+// [11-3] getchar, putchar
+/***********************************************************/
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+    while (1)
+    {
+        int ch;
+        ch = getchar();
+        if (ch == 10) break;
+        putchar(ch);
+    }
+    printf("\n");
+
+    while (1)
+    {
+        int ch;
+        ch = getchar();
+        if (ch == 10) break;
+        putchar(ch);
+    }
+    return 0;
+}
+#endif
+
+/***********************************************************/
+// [11-3] scanf에 공백??
 /***********************************************************/
 
 #if 0
@@ -3334,21 +3362,45 @@ int main(void)
 
 int main(void)
 {
-	while (1)
-	{
-		int ch;
-		ch = getchar();
+    for (int i = 0; i < 5; i++)
+    {
+        char ch;
+        scanf(" %c", &ch); // %앞에 공백 삽입 시 -> 화이트 스페이스 무시!!
+        // 입력 값 : H e l l o
+        // 입력 값 : H엔터e엔터l엔터l엔터o엔터
+        // 입력 값 : H탭e탭l탭l탭o탭
+        printf("%c\n", ch);
+    }
 
-		if (ch == 10) break;
-		putchar(ch);
-	}
-	printf("\n");
-	return 0;
+    return 0;
 }
 #endif
 
 /***********************************************************/
-// [11-3] scanf에 공백?
+// [11-4] 버퍼를 사용한 문자 입력
+/***********************************************************/
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+    while (1)
+    {
+        // 엔터가 들어오기 전까지 입력!!
+        // 엔터 들어올 시 break;
+        char ch;
+        scanf("%c", &ch);
+        if (ch == '\n') break;
+        printf("%c", ch);
+    }
+
+    return 0;
+}
+#endif
+
+
+/***********************************************************/
+// [11-5] 입력 문자의 아스키 코드를 출력하는 프로그램
 /***********************************************************/
 
 #if 0
@@ -3356,74 +3408,20 @@ int main(void)
 
 int main(void)
 {
-	for (int i = 0; i < 5; i++)
-	{
-		char ch;
-		scanf(" %c", &ch); // %앞에 공백 삽입 시 -> 화이트 스페이스 무시
-		// 입력 값 : H e l l o
-	    // 입력 값 : H엔터e엔터l엔터l엔터o엔터
-	    // 입력 값 : H탭e탭l탭l탭o탭
-		printf("%c", ch);
-	}
+    int result;
+    char ch;
 
-	return 0;
+    while (1)
+    {
+        result = scanf("%c", &ch);
+        if (result == EOF) break;
+        printf("%d ", ch);
+    }
+
+    return 0;
 }
 #endif
 
-/***********************************************************/
-// [11-4] 버퍼를 사용하는 문자 입력
-/***********************************************************/
-
-#if 0
-#include <stdio.h>
-
-int main(void)
-{
-	/* 
-	// 3개의 문자를 입력받는
-	for (int i = 0; i < 3;i ++)
-	{
-		char ch;
-		scanf("%c", &ch);
-		printf("%c", ch); // l,e는 버퍼에 남아있음
-	}
-	*/
-	while (1)
-	{
-		int result;
-		// 엔터가 들어오기 전까지 입력!!
-		// 엔터 들어올 시 break;
-		char ch;
-		scanf("%c", &ch);
-		if (result == '\n') break;
-		printf("c", ch);
-	}
-	return 0;
-}
-#endif
-
-/***********************************************************/
-// [11-5] 입력 문자의 아스키 코드 값을 출력하는 프로그램
-/***********************************************************/
-
-#if 0
-#include <stdio.h>
-
-int main(void)
-{
-	int result;
-	char ch;
-	
-	while(1)
-	{
-		result = scanf("%c", &ch);
-		if (result == EOF) break;
-		printf("%d ", ch);
-	}
-
-	return 0;
-}
-#endif
 
 /***********************************************************/
 // [11-6] getchar 함수를 사용한 문자열 입력
@@ -3432,88 +3430,97 @@ int main(void)
 #if 0
 #include <stdio.h>
 
-// apple ->문자열을 입력받는함수
+// apple -> 문자열을 입력받는 함수!!
 void my_getchar(char* str, int size);
-
 
 int main(void)
 {
-	char str[7];
-	my_getchar(str, 7);
-	printf("입력한 문자열 : %s\n", str);
+    char str[7];
+    my_getchar(str, 7);
+    printf("입력한 문자열 : %s\n", str);
 
-	return 0;
+    return 0;
 }
 void my_getchar(char* str, int size)
 {
-	// Hello World!! -> Hello(\n)
-	// chocobanana -> chocob
-	// size - 1 번 입력받는다
-	int i;
-	for (i = 0; i < size - 1; i++)
-	{
-		// 사용자가 6글자 이상 입력할거다!!
-		str[i] = getchar();
-		if (str[i] == '\n')
-		{
-			break;
-			i++;
-		}
-	}
-	str[i] = '\0';
+    int i;
+    for (i = 0; i < size - 1; i++)
+    {
+        // 사용자가 6글자 이상 입력할거다!!
+        str[i] = getchar();
+        if (str[i] == '\n')
+        {
+            break;
+            i++;
+        }
+    }
+    str[i] = '\0';
 }
 #endif
+
 
 /***********************************************************/
 // [11-7] 버퍼 초기화
 /***********************************************************/
-
 #if 0
 #include <stdio.h>
 
 int main(void)
 {
-	// scanf()과 getchar는 buffer 공유
-	int num;
-	printf("학번 입력 : ");
-	scanf("%d", &num);
-	printf("학점 입력 : ");
-	getchar();
+    // scanf()과 getchar()는 buffer를 공유!!
+    int num;
+    printf("학번 입력 : ");
+    scanf("%d", &num);
+    printf("학점 입력 : ");
 
-	return 0;
+    // 입력 버퍼 사용 시 주의사항
+    // 잘 모르겠으면 버퍼를 초기화하자!!
+    getchar(); // 화이트 스페이스 꿀꺽!!
+
+    int grage = getchar();
+    printf("학번 : %d, 학점 : %c", num, grage);
+
+    return 0;
 }
 #endif
 
-/***********************************************************/
-// [11-도전] 길이가 가장긴 단어 찾기 (다시확인필요)
-/***********************************************************/
 
+/***********************************************************/
+// [11-도전] 길이가 가장 긴 단어 찾기
+/***********************************************************/
 #if 0
 #include <stdio.h>
 
-// apple ->문자열을 입력받는함수
-int main (void)
+int main(void)
 {
-	
-	int ch, max, len;
-	max = -1;
-	while (1)
-	{
-		ch = getchar();
-		if (ch == EOF) break;
+    // 제약(Constraint)
+    // 1. 문자열 입력하는 (scanf("%s")) 사용 ㄴㄴ
+    // 2. string.h 쓰지 않기 -> 문자열 길이 strlen()
 
-		// 하나의 문자열을 입력!!
-		len = 0;
-		while (1)
-		{
-			if (ch == '\n') break;
-			ch = getchar();
-			len++;
-		}
-		// printf("해당 문자열의 길이 : %d\n", len);
-		if (len > max) max = len;
-	}
-	printf("가장 긴 단어의 길이 : %d\n", max);
+    int ch, max, len;
+    max = -1;
+    while (1)
+    {
+        // 1. 전체 입력의 종료를 판단
+        // 2. 버퍼 비우기!!
+        ch = getchar();
+        if (ch == EOF) break;
+
+        // 하나의 문자열을 입력!!
+        len = 0;
+        while (ch != '\n')
+        {
+            ch = getchar();
+            printf("%d\n", ch);
+            len++;
+        }
+        printf("해당 문자열의 길이 : %d\n", len);
+        if (len > max) max = len;
+    }
+    printf("가장 긴 단어의 길이 : %d\n", max);
+
+    return 0;
+}
 #endif
 
 
@@ -3526,28 +3533,29 @@ int main (void)
 
 int main(void)
 {
-	int array[5] = { 10,20,30,40,50 };
-	int* pa = array;
-	printf("%p\n", array);
-	printf("%p\n", pa);
+    int array[5] = { 10, 20, 30, 40, 50 };
+    int* pa = array;
+    printf("%p\n", array);
+    printf("%p\n", pa);
 
-	char fruit[6] = { 'a','p','p','l','e' };
-	char fruit2[6] = "apple";
-	printf("%s\n", fruit);
-	printf("%s\n", fruit2);
-	
-	char* pf = fruit;
-	char* pf2 = fruit2;
+    char fruit[6] = { 'a', 'p', 'p', 'l', 'e', '\0' };
+    char fruit2[6] = "apple";
+    printf("%s\n", fruit);
+    printf("%s\n", fruit2);
 
-	printf("%p\n", pf);
-	printf("%p\n", pf2);
+    char* pf = fruit;
+    char* pf2 = fruit2;
 
-	return 0;
+    printf("%p\n", pf);
+    printf("%p\n", pf2);
+
+    return 0;
 }
 #endif
 
+
 /***********************************************************/
-// [12-5] 포인터로 문자열을 사용하는 방법
+// [12-2] 포인터로 문자열을 사용하는 방법
 /***********************************************************/
 
 #if 0
@@ -3555,261 +3563,218 @@ int main(void)
 
 int main(void)
 {
-	char drink[80] = "redbull";
-	char* pd = drink;
+    char drink[80] = "tejava";
+    char* pd = drink;
 
-	//printf("%c\n", pd[0]);
+    // *pd의 값이 널이 아닐 때 1, 널이면 0
+    while (*pd) printf("%c", *(pd++));
 
-	/*while (1)
-	{
-		if (*pd == '\0') break;
-		printf("%c", *pd);
-		pd++;
-	}*/
-
-	/*while (*pd != '\0')
-	{
-		printf("%c", *pd);
-		pd++;
-	}*/
-
-	/*while (*pd != '\0')
-	{
-		printf("%c", *pd++);
-	}*/
-
-	// *pd의 값이 널이 아닐 때 1, 널이면 0
-	/*while (*pd) 
-	{
-		printf("%c", *pd++);
-	}*/
-
-	while (*pd) printf("%c", *pd++);
-
-	return 0;
+    return 0;
 }
 #endif
 
-/***********************************************************/
-// [12-잠깐] 같은 문자열 상수???
-/***********************************************************/
 
+/***********************************************************/
+// [12-잠깐] 같은 문자열 상수??
+/***********************************************************/
 #if 0
 #include <stdio.h>
 
 int main(void)
 {
-	char fruit[6] = { 'a','p','p','l','e' };
-	char fruit2[6] = "apple";
-	char fruit3[6] = "apple";
+    char fruit[6] = { 'a', 'p', 'p', 'l', 'e', '\0' };
+    char fruit2[6] = "apple";
+    char fruit3[6] = "apple";
 
-	printf("apple의 주소 : %p\n", *"apple");
-	printf("apple의 주소 : %p\n", *"apple");
+    printf("apple의 주소 : %p\n", "apple");
+    printf("apple의 주소 : %p\n", "apple");
 
-	printf("%p\n", fruit);
-	printf("%p\n", fruit2);
-	printf("%p\n", fruit3);
+    printf("%p\n", fruit);
+    printf("%p\n", fruit2);
+    printf("%p\n", fruit3);
 
-	char* pf = fruit;
-	char* pf2 = fruit2;
-	char* pf3 = fruit3;
+    char* pf = fruit;
+    char* pf2 = fruit2;
+    char* pf3 = fruit3;
 
-	printf("%p\n", pf);
-	printf("%p\n", pf2);
-	printf("%p\n", pf3);
+    printf("%p\n", pf);
+    printf("%p\n", pf2);
+    printf("%p\n", pf3);
 
-	return 0;
+    return 0;
 }
 #endif
+
 
 /***********************************************************/
 // [12-3] scanf 함수를 사용한 문자열 입력
 /***********************************************************/
-
 #if 0
 #include <stdio.h>
 
 int main(void)
 {
-	char str[80];
-	printf("문자열 입력 : ");
-	scanf("%s", str);
-	printf("%s\n", str);
-	printf("문자열 입력 : ");
-	scanf("%s", str);
-	printf("%s\n", str);
+    char str[80];
 
-	return 0;
+    printf("문자열 입력 : ");
+    scanf("%s", str);
+    printf("%s\n", str);
+    scanf("%s", str);
+    printf("%s\n", str);
+
+
+    return 0;
 }
 #endif
+
 
 /***********************************************************/
 // [12-4] gets 함수로 한 줄의 문자열 입력
 /***********************************************************/
-
 #if 0
 #include <stdio.h>
 
 int main(void)
 {
-	char str[80];
+    char str[80];
+    printf("문자열 입력 : ");
+    gets(str); // \t, 공백 입력 가능!!
+    printf("%s\n", str);
 
-	printf("공백이 포함된 문자열 입력 : ");
-	gets(str); // \t, 공백 입력 가능
-	printf("입력한 문자열은 %s입니다.", str);
-
-	return 0;
+    return 0;
 }
-
 #endif
 
-/***********************************************************/
-// [12-5} gets의 안정성 보장을 위한 fgets
-/***********************************************************/
 
+/***********************************************************/
+// [12-5] gets의 안정성 보장을 위한 fgets
+/***********************************************************/
+#if 0
+#include <stdio.h>
+#include <string.h> // strlen()
+
+int main(void)
+{
+    char str[80];
+    printf("문자열 입력 : ");
+    fgets(str, sizeof(str), stdin); // 키보드로 입력하겠다!!
+    // fgets로 입력 받을 때 문자열 길이는 
+    // strlen() - 1
+    printf("문자열 길이 : %d\n", strlen(str) - 1);
+    // 문자열을 제외한 자료구조 배열에서는
+    // 배열의 요소 개수를 sizeof(배열명) / sizeof(자료형)
+    printf("문자열 길이 2 : %d\n", sizeof("apple") - 1);
+
+    printf("입력한 문자열 : %s\n", str);
+
+    return 0;
+}
+#endif
+
+
+/***********************************************************/
+// [12-6] 개행 문자로 인해 get 함수가 입력 안되는 경우
+/***********************************************************/
 #if 0
 #include <stdio.h>
 
 int main(void)
 {
-	char str[10];
-	printf("공백이 포함된 문자열 입력 : ");
-	fgets(str, sizeof(str), stdin);
-	printf("입력한 문자열은 %s 입니다.", str);
+    int age;
+    char name[20];
+    printf("나이 입력 : ");
+    scanf("%d", &age);
 
+    printf("이름 입력 : ");
+    fgetc(stdin);
+    gets(name);
 
-	return 0;
+    printf("나이 : %d, 이름 : %s\n", age, name);
+
+    return 0;
 }
 #endif
 
-/***********************************************************/
-// [12-질문] title
-/***********************************************************/
-
-#if 0
-#include <stdio.h>
-#include <string.h> //strlen()
-
-int main(void)
-{
-	char str[80];
-	printf("문자열 입력 : ");
-	fgets(str, sizeof(str), stdin); // 키보드로 입력하겠다!!
-	// fgets로 입력 받을 때 문자열 길이는 
-	// strlen() - 1
-	printf("문자열 길이 : %d\n", strlen(str) - 1);
-	// 문자열을 제외한 자료구조 배열에서는
-	// 배열의 요소 개수를 sizeof(배열명) / sizeof(자료형)
-	printf("문자열 길이 2 : %d\n", sizeof("apple") - 1);
-
-	printf("입력한 문자열 : %s\n", str);
-
-
-	return 0;
-}
-#endif
-
-/***********************************************************/
-// [12-6] 개행문자로 인해 gets 함수가 입력을 못하는 경우
-/***********************************************************/
-
-#if 0
-#include <stdio.h>
-
-int main(void)
-{
-	int age;
-	char name[20];
-	printf("나이 입력 : ");
-	scanf("%d", &age);
-
-	printf("이름 입력 : ");
-	//gets함수 사용 전 버퍼 초기화 필요!!
-	// 초기화 방법 3가지
-	// p.385참고
-	//getchar(); // 방법 1
-	//scanf("%*c"); // 방법 2 %*c-> 주소 생략 후 char 읽기
-
-	fgetc(stdin); // 방법3
-
-	gets(name);
-
-	printf("나이 : %d, 이름 : %s\n", age, name);
-
-	return 0;
-}
-#endif
 
 /***********************************************************/
 // [12-7] 문자열을 출력하는 puts와 fputs함수
 /***********************************************************/
+#if 0
+#include <stdio.h>
+int main(void)
+{
+    char str[80] = "apple juice";
+    char* ps = "banana";
 
+    // puts -> 자동 줄바꿈
+    // fputs -> 자동 줄바꿈 X
+
+    puts(str);
+    puts(ps);
+
+    fputs(str, stdout); // 모니터를 통해 표준출력!!
+    fputs(ps, stdout);
+
+    return 0;
+}
+#endif
+
+
+/***********************************************************/
+// [12-직접] gets 함수 구현해보기!!
+/***********************************************************/
 #if 0
 #include <stdio.h>
 
 int main(void)
 {
-	char str[80] = "orange juice";
-	char* ps = "tangerine";
+    char str[20]; // "apple" 값을 입력!!
+    // getchar() 함수를 활용해 gets() 구현!!
+    // getchar() -> 문자 하나하나 입력!!
+    int ch;
+    char* ps = str;
+    while (1)
+    {
+        ch = getchar();
+        *ps++ = ch;
+        if (ch == '\n') break;
+    }
+    *ps = '\0';
 
-	// puts -> 자동 개행
-	// fputs -> 자동 개행x
+    printf("%s", str); // apple 출력!!
 
-	puts(str);
-	puts(ps);
-
-
-	fputs(str, stdout); // 모니터를 통해 표준 입출력
-	fputs(ps, stdout);
-
-	return 0;
+    return 0;
 }
 #endif
 
 /***********************************************************/
-// [12-직접] gets함수 구현해보기
+// [12-직접] gets 함수 구현해보기!!
 /***********************************************************/
-
 #if 0
 #include <stdio.h>
 
 int main(void)
 {
-	char str[20]; //"apple" 값을 입력!!
-	// scanf("%c"), getchar()
-	// getschar()활용해 gets()구현
-	// getchar() -> 문자 하나하나 입력
+    int i = 0;
+    char str[20];
+    char ch;
 
-	// gets() 시작
-	//int i = 0;
-	//int ch;
-	//while (1)
-	//{
-	//	
-	//	ch = getchar();
-	//	str[i] = ch;
-	//	i++;
+    printf("입력 : ");
 
-	//	if (ch == '\n') break;
-	//}
-	//// gets() 끝
-	//str[i] = '\0'; // 개행 문자 자리에 널문자 저장
+    while (1)
+    {
+        ch = getchar();
+        str[i] = ch;
+        i++;
 
-	//포인터
-	char ch;
-	char* ps = str;
-	while (1)
-	{
-		ch = getchar();
-		*ps++ = ch;
-		if (ch == '\n') break;
-		
-	}
-	*ps = '\0';
+        if (ch == '\n') break;
+    }
 
-	printf("%s", str); // apple 출력
+    str[--i] = '\0';
 
-	return 0;
+    printf("출력 : %s", str);
+
+    return 0;
 }
 #endif
 
