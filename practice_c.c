@@ -3748,164 +3748,114 @@ int main(void)
 #endif
 
 /***********************************************************/
-// [12-직접] gets 함수 구현해보기!!
+// [12-8] 문자열을 대입하는 strcpy 함수
 /***********************************************************/
 #if 0
 #include <stdio.h>
+#include <string.h> // strcpy()
 
 int main(void)
 {
-    int i = 0;
-    char str[20];
-    char ch;
+    char str[80] = "strawberry";
+    // str을 "banana"로 바꾸시오
+    // strcpy(복사할 곳, 복사할 내용);
+    strcpy(str, "banana");
+    printf("%s\n", str);
 
-    printf("입력 : ");
-
-    while (1)
-    {
-        ch = getchar();
-        str[i] = ch;
-        i++;
-
-        if (ch == '\n') break;
-    }
-
-    str[--i] = '\0';
-
-    printf("출력 : %s", str);
+    char* ps = str;
+    ps = "kiwi";
+    printf("%s\n", ps);
+    printf("%s\n", str); // banana
 
     return 0;
 }
 #endif
 
-/***********************************************************/
-// [12-8] 문자열을 대입하는 strcpy함수
-/***********************************************************/
 
+/***********************************************************/
+// [12-9] n개의 문자열을 복사하는 strncpy
+/***********************************************************/
 #if 0
 #include <stdio.h>
 #include <string.h>
 
 int main(void)
 {
-	char str[80] = "strawberry";
-	// str을 "banana"로 바꾸시오
-	// strcpy(복사할 곳, 복사할 내용);
-	strcpy(str, "banana");
+    char str[80] = "strawberry";
+    strncpy(str, "mango", 5);
 
-	printf("%s\n", str);
+    char* ps = "chocolate";
+    strncpy(str, ps, 5);
 
-	char* ps = str;
-	ps = "kiwi";
-	printf("%s\n", ps);
-	printf("%s\n", str); // banana
-	return 0;
+    char str2[80] = "melon_top_100";
+    strncpy(str, str2, 5);
+
+    printf("%s\n", str);
+
+    return 0;
 }
 #endif
 
-/***********************************************************/
-// [12-9] n개의 문자열을 복사하는 strncpy
-/***********************************************************/
-
-#if 0
-#include <stdio.h>
-
-int main(void)
-{
-	char str[80] = "strawberry";
-	strncpy(str, "mango", 5);
-
-	char* ps = "chocolate";
-	strncpy(str, ps, 5);
-
-	char str2[80] = "melon_top_100";
-	strncpy(str, str2, 5);
-
-	printf("%s\n", str);
-
-	return 0;
-}
-#endif
 
 /***********************************************************/
 // [12-8-직접구현] strcpy
 /***********************************************************/
-
 #if 0
 #include <stdio.h>
 
+// d: destination, s : source
 char* my_strcpy(char* pd, char* ps);
 
 int main(void)
 {
-	char str[80] = "strawberry";
+    char str[80] = "strawberry";
+    printf("바꾸기 전 문자열 : %s\n", str); // strawberry
+    my_strcpy(str, "mango");
 
-	printf("바꾸기 전 문자열 : %s\n", str); // strawberry
-
-	// my_strcpy(복사할 곳, 복사할 내용)
-	// 배열을 다룰 때 크기를 넣는 이유
-	// -> 다른 함수에서 원래 배열의 크기를 못 보기 때문에
-	// 문자열 배열 -> 다른 함수에서 문자열 크기 볼수있다.
-	// 널 문자까지 개수를 세면 -> 문자열의 크기\
-	
-	my_strcpy(str, "mango");
-	
-	printf("바꾼 후 문자열 : %s\n", str); //mango
-
-	return 0;
+    printf("바꾼 후 문자열 : %s\n", str); // mango
+    return 0;
 }
-
-// d: destination s: source
-char *my_strcpy(char* pd, char* ps)
+char* my_strcpy(char* pd, char* ps)
 {
-	char* pr;
-	pr = pd;
+    char* po;
+    po = pd;
 
-	// pd -> strawberry\0
-	// ps -> mango\0
-	// 
-	//*ps값이 널이 아닐때 동장
-	while (*ps) *pr++ = *ps++; // s-> m
-	*pr = '\0';
-	return pr;
-	// pr -> mangoberry\0
-
-	
+    while (*ps) *po++ = *ps++;
+    *po = '\0';
+    return po;
 }
+
 #endif
+
 
 /***********************************************************/
 // [12-10] 문자열을 연결하는 strcat()
 /***********************************************************/
-
 #if 0
 #include <stdio.h>
 #include <string.h> // strcat()
-
 int main(void)
 {
-	char str[80] = "straw";
-	// strcat(연결할 장소, 연결 내용);
-	strcat(str, "berry");
+    char str[80] = "straw";
+    // strcat(연결할 장소, 연결 내용);
+    strcat(str, "berry");
+    printf("%s\n", str); // strawberry
+    char* pi = " ice-cream";
+    strcat(str, pi);
+    printf("%s\n", str); // strawberry ice-cream
 
-	printf("%s\n", str); // strawberry
+    char str2[80] = "cake dessert yogurt";
+    strncat(str, str2, 4);
+    printf("%s\n", str); // strawberry ice-creamcake
 
-	char* pi = " ice-cream";
-	strcat(str, pi);
-	printf("%s\n", str); //strawberry ice-cream
-
-	char str2[80] = "cake desert yogurt";
-	strncat(str, str2, 4);
-	printf("%s\n", str); //strawberry ice-creamcake
-
-	return 0;
+    return 0;
 }
 #endif
 
+
 /***********************************************************/
-// [12-10] 직접구현 나만의 my_strcat()만들기 
+// [12-10-직접구현] 나만의 my_strcat() 만들기
 /***********************************************************/
-//다시하기
 #if 0
 #include <stdio.h>
 
@@ -3913,65 +3863,49 @@ char* my_strcat(char* pd, char* ps);
 
 int main(void)
 {
-	char str[80] = "straw";
+    char str[80] = "straw";
+    my_strcat(str, "berry");
+    printf("%s\n", str); // strawberry
 
-	my_strcat(str, "berry");
-
-	printf("%s\n", str); //strawberry
-
-	return 0;
+    return 0;
 }
-
 char* my_strcat(char* pd, char* ps)
 {
-	char* pr = pd;
-
-	// "straw" "berry"
-	// 1. pr을 가장 오른쪽 위치로 이동
-	while (pr != '\0')
-	{
-		pr++;
-	}
-	// 2. 해당 값들을 ps에 있는 값들로 채우자
-	while (*ps != '\0')
-	{
-		*pr++ = *ps++; // b->w 다음에 대입
-	}
-	// 3. 다끝나면 널문자
-	*pr = '\0';
-
-	return pr;
+    char* po = pd;
+    while (*po)   po++;
+    while (*ps) *po++ = *ps++;
+    *po = '\0';
+    // 안 넣어도 동하는 이유 : 초기화된 문자열은 크기만큼 \0로 가득 차 있다
+    return po;
 }
 
 #endif
 
+
 /***********************************************************/
 // [12-11] 문자열 길이 strlen()
 /***********************************************************/
-
 #if 0
 #include <stdio.h>
-#include <string.h>
-
+#include <string.h> // strlen()
 int main(void)
 {
-	char str1[80], str2[80];
-	printf("두 과일 입력(과일1 과일2) : ");
-	scanf("%s %s", str1, str2);
+    char str1[80], str2[80];
+    printf("두 과일 입력(과일1 과일2) : ");
+    scanf("%s %s", str1, str2);
 
-	// strlen(문자열) -> 문자열의 길이 반환
-	if (strlen(str1) > strlen(str2))
-	{
-		printf("첫 번째 과일이 더 깁니다.\n");
-	}
-	else
-	{
-		printf("두 번째 과일이 더 깁니다.\n");
-	}
-	printf("첫 번째 과일 : %s\n", str1);
-	printf("두 번째 과일 : %s\n", str2);
-
-	return 0;
+    // strlen(문자열) -> 문자열의 길이
+    if (strlen(str1) > strlen(str2))
+    {
+        printf("첫 번째 과일이 더 깁니다.\n");
+    }
+    else
+    {
+        printf("두 번째 과일이 더 깁니다.\n");
+    }
+    printf("첫 번째 과일 : %s\n", str1);
+    printf("두 번째 과일 : %s\n", str2);
+    return 0;
 }
 #endif
 
@@ -3986,116 +3920,62 @@ int my_strlen(char* str);
 
 int main(void)
 {
-	char str1[80], str2[80];
-	printf("두 과일 입력(과일1 과일2) : ");
-	scanf("%s %s", str1, str2);
+    char str1[80], str2[80];
+    printf("두 과일 입력(과일1 과일2) : ");
+    scanf("%s %s", str1, str2);
 
-	if (my_strlen(str1) > my_strlen(str2))
-	{
-		printf("첫 번째 과일이 더 깁니다.\n");
-	}
-	else
-	{
-		printf("두 번째 과일이 더 깁니다.\n");
-	}
-	printf("첫 번째 과일 : %s\n", str1);
-	printf("두 번째 과일 : %s\n", str2);
+    if (my_strlen(str1) > my_strlen(str2))
+    {
+        printf("첫 번째 과일이 더 깁니다.\n");
+    }
+    else
+    {
+        printf("두 번째 과일이 더 깁니다.\n");
+    }
+    printf("첫 번째 과일 : %s\n", str1);
+    printf("두 번째 과일 : %s\n", str2);
 
-	return 0;
+    return 0;
 }
-
 int my_strlen(char* str)
 {
-	char* po = str;
-	int length = 0;
-	while (1)
-	{
-		*po++;
-		length++;
-
-		if (*po == '\0') break;
-	}
-	
-	return length;
-	
+    int length = 0;
+    char* po = str;
+    while (*po++) length++;
+    return length;
 }
+
 #endif
 
 /***********************************************************/
-// [12-12] strcmp 함수를 사용한 문자열 비교
+// [12-12] strcmp 함수를 사용한 문자열 비교 
 /***********************************************************/
-
 #if 0
 #include <stdio.h>
-#include <string.h>
-
+#include <string.h> // strcmp(), strncmp()
 int main(void)
 {
-	// strcmp(문자열1, 문자열2)
-	// 각 문자열 앞에서부터 아스키코드 값 비교
-	// 모두 같으면 -> 0
-	// 두 번째 아스키 값 크면 -> -1
-	// 첫 번째 아스키 값 크면 -> 1
-	// 모두 같으면 -> 0
-
-	char str1[80] = "pear";
-	char str2[80] = "peach";
-	int result = strcmp(str1, str2);
-
-	switch (result)
-	{
-	case 1: printf("%s이 사전에 나중에 나옵니다. \n", str1); 
-		break;
-	case 2: printf("%s이 사전에 나중에 나옵니다. \n", str2);
-		break;
-	case 0: printf("문자열이 동일합니다. \n");
-		break;
-	default: printf("잘못 입력하셨습니다.\n");
-	}
-
-	return 0;
+    char str1[80] = "pear";
+    char str2[80] = "peach";
+    //int result = strncmp(str1, str2, 3);
+    int result = strcmp(str1, str2);
+    switch (result)
+    {
+    case 1: printf("%s이 사전에 나중에 나옵니다.\n", str1);
+        break;
+    case -1: printf("%s이 사전에 나중에 나옵니다.\n", str2);
+        break;
+    case 0: printf("문자열이 동일합니다.\n");
+        break;
+    default: printf("잘못 입력하셨습니다.\n");
+        break;
+    }
+    return 0;
 }
 #endif
-
-// [12-12] strncmp 함수를 사용한 문자열 비교
 /***********************************************************/
-
-#if 0
-#include <stdio.h>
-#include <string.h>
-
-int main(void)
-{
-	// strcmp(문자열1, 문자열2)
-	// 각 문자열 앞에서부터 아스키코드 값 비교
-	// 모두 같으면 -> 0
-	// 두 번째 아스키 값 크면 -> -1
-	// 첫 번째 아스키 값 크면 -> 1
-	// 모두 같으면 -> 0
-
-	char str1[80] = "pear";
-	char str2[80] = "peach";
-	int result = strncmp(str1, str2, 3);
-
-	switch (result)
-	{
-	case 1: printf("%s이 사전에 나중에 나옵니다. \n", str1);
-		break;
-	case 2: printf("%s이 사전에 나중에 나옵니다. \n", str2);
-		break;
-	case 0: printf("문자열이 동일합니다. \n");
-		break;
-	default: printf("잘못 입력하셨습니다.\n");
-	}
-
-	return 0;
-}
-#endif
-
+// [12-12] 나만의 my_strcmp() 만들기
 /***********************************************************/
-// [12-12] 나만의 my_strcmp() 만들기 
-/***********************************************************/
-// 다시 하기
 #if 0
 #include <stdio.h>
 
@@ -4103,91 +3983,71 @@ int my_strcmp(char* str1, char* str2);
 
 int main(void)
 {
-	char str1[80] = "pear";
-	char str2[80] = "peach";
-	int result = my_strcmp(str1, str2);
+    // 모두 소문자만 비교!!
+    char str1[80] = "pear";a
+    char str2[80] = "peach";
+    int result = my_strcmp(str1, str2);
+    switch (result)
+    {
+    case 1: printf("%s이 사전에 나중에 나옵니다.\n", str1);
+        break;
+    case -1: printf("%s이 사전에 나중에 나옵니다.\n", str2);
+        break;
+    case 0: printf("문자열이 동일합니다.\n");
+        break;
+    default: printf("잘못 입력하셨습니다.\n");
+        break;
+    }
 
-	switch (result)
-	{
-	case 1: printf("%s이 사전에 나중에 나옵니다. \n", str1);
-		break;
-	case 2: printf("%s이 사전에 나중에 나옵니다. \n", str2);
-		break;
-	case 0: printf("문자열이 동일합니다. \n");
-		break;
-	default: printf("잘못 입력하셨습니다.\n");
-	}
-
-	return 0;
+    return 0;
 }
-
 int my_strcmp(char* str1, char* str2)
 {
+    char* p1 = str1;
+    char* p2 = str2;
 
-	char* ps1 = str1;
-	char* ps2 = str2;
-
-	// 문자열을 하나씩 이동하면서 비교
-	// 각 문자를 비교하였을 때,
-	// str1의 문자 아스키 값이 크면 1
-	// str2의 문자 아스키 값이 크면 -1
-	// 전부 같으면 0을 반환
-
-
-	}
-
+    while ((*p1 == *p2) && ((*p1 != '\0')))
+    {
+        p1++;
+        p2++;
+    }
+    if (*p1 > *p2) return 1;
+    else if (*p1 < *p2) return -1;
+    else return 0;
 }
+
+
 #endif
+
 
 /***********************************************************/
 // [12-추가] 문자 개수 찾기
 /***********************************************************/
 
-#if 0
+#if 1
 #include <stdio.h>
 
-int find_char(char* str, char* ch);
+int find_char(char* str, char ch);
 
 int main(void)
 {
-	printf("%d\n", find_char("Hello", "H"));
+    printf("%d\n", find_char("Hello", 'H'));
 
-	return 0;
+    return 0;
 }
-
-int find_char(char* str, char* ch)
+int find_char(char* str, char ch)
 {
-	char* ps = str;
-	char* pc = ch;
-	int count = 0;
-
-	while (1)
-	{
-		*ps++;
-
-		if (*ps == *pc)
-		{
-			count++;
-		}
-		
-		if (*ps == '\0') break;
-	}
-
-	return count;
+    // str : "Hello"
+    // ch : 'H'
+    int count = 0;
+    char* po = str;
+    while (*po)
+    {
+        if (*po == ch) count++;
+        po++;
+    }
+    return count;
 }
-#endif
-
-/***********************************************************/
-// [12-도전] 단어 정렬 프로그램
-/***********************************************************/
-
-#if 0
-#include <stdio.h>
-
-int main(void)
-{
 
 
-	return 0;
-}
 #endif
