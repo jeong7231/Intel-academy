@@ -4051,3 +4051,906 @@ int find_char(char* str, char ch)
 
 
 #endif
+
+// 4月16日(水)
+/***********************************************************/
+// [13-1] 두 함수에서 같은 이름의 지역 변수를 사용
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void assign(void);
+
+int main(void)
+{
+	// auto 지역 변수 선언 시 사용되는 예약어
+	// 생략 시 컴파일러가 자동으로 추가한다.
+	auto int a = 10;
+	printf("a의 값 : %d\n", a);
+
+	assign();
+	printf("a의 값 : %d\n", a);
+
+	return 0;
+}
+
+void assign(void)
+{
+	auto int a = 20;
+	printf("assign 함수 내 a의 값 : %d\n", a);
+}
+#endif
+
+/***********************************************************/
+// [13-2] 블록 안에서 사용하는 지역 변수
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int a = 10;
+	printf("here1 a의 값 : %d\n", a); // 10
+	{
+		int a = 20;
+		printf("here2 a의 값 : %d\n", a); // 20
+		{
+
+			int a = 30;
+			printf("here3 a의 값 : %d\n", a); // 30
+		}
+	}
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [13-3] 전역변수
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void assign10(void);
+void assign20(void);
+
+int a;
+int main(void)
+{
+	// 지역 변수 -> 초기화가 안되어 있으면 사용x
+	/*int b;
+	printf("%d", b);*/
+
+	// 전역 변수는 컴파일러가 자동으로 초기화
+	// int-> 0, double-> 0.0, char -> 0
+	printf("함수 호출 전 전역 변수 a의 값 : %d\n", a);
+
+	assign10();
+	assign20();
+
+	printf("함수 호출 후 전역 변수 a의 값 : %d\n", a);
+	return 0;
+}
+
+void assign10(void)
+{
+	a = 10;
+}
+void assign20(void)
+{
+	auto int a;
+	a = 20;
+}
+#endif
+
+/***********************************************************/
+// [13-4] 정적 지역 변수
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void print_star(void);
+
+int main(void)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		print_star();
+	}
+	
+	return 0;
+}
+void print_star(void)
+{
+	// static : 정적 지역 변수
+	// 함수 블록 사라지더라도 -> 메모리에 저장 공간이 남아 있다.
+	// 정적 지역 변수를 계속 사용할 수 있다. (선언된 함수에서)
+	// static 키워드가 붙은 놈들은 전용 메모리공간에 저장됨
+	// static 키워드 발견 시 static영역에서 호출함
+
+	static int a = 1;
+	for (int i = 0; i < a; i++)
+	{
+		printf("*");
+	}
+	printf("\n");
+	a++;
+}
+#endif
+
+/***********************************************************/
+// [13-5] 레지스터 변수
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+#include <time.h> //clock() main 실행 시간 측정
+
+int main(void)
+{
+	// 약수의 합
+	// 100 -> 100의 약수의 합 sum 저장
+
+	register int num = 2000000000;
+	register long long sum = 0;
+
+	long start = clock();
+
+	for (int i = 1; i <= num; i++)
+	{
+		sum += i;
+	}
+	printf("%d의 약수의 합 : %lld\n", num, sum);
+	long end = clock();
+	// runtime : for문 실행 시간(s)
+	double runtime = (double)(end - start) / CLOCKS_PER_SEC;
+
+	printf("runtime : %.3lfs\n", runtime);
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [13-6] 값을 복사해서 전달
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int add_ten(int a);
+
+int main(void)
+{
+	int a = 10;
+	printf("함수 호출 전 a : %d\n", a);
+
+	a = add_ten(a);
+	printf("함수 호출 후 a : %d\n", a);
+
+	return 0;
+}
+int add_ten(int a)
+{
+	a = a + 10;
+
+	return a;
+}
+#endif
+
+/***********************************************************/
+// [13-7] 주소를 전달
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void add_ten(int* pa);
+
+int main(void)
+{
+	int a = 10;
+
+	printf("함수 호출 전 a : %d\n", a);
+	add_ten(&a);
+	printf("함수 호출 후 a : %d\n", a);
+
+	return 0;
+}
+
+void add_ten(int* pa)
+{
+	*pa = *pa + 10;
+}
+#endif
+
+/***********************************************************/
+// [13-8] 주소를 반환하는 함수
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int* sum(int a, int b);
+
+int main(void)
+{
+	int a = 10, b = 20;
+	// 두 정수의 합 sum();
+	// sum (10 , 20);
+	sum(a, b);
+
+	//int result = sum(a, b);
+	int* resp = sum(a, b);
+	printf("두 정수의 합 : %d\n", *resp);
+
+	return 0;
+}
+
+int* sum(int a, int b)
+{
+	// 주소값을 반환 시
+    // static 키워드를 사용하자
+	static int result;
+	result = a + b;
+
+	return &result;
+}
+#endif
+
+/***********************************************************/
+// [13-도전] 전역 변수 교환 프로그램
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void swap(void);
+
+int a, b; //전역 변수 a와 b선언
+
+int main(void)
+{
+	//전역 변수 초기화
+	a = 10;
+	b = 20;
+	printf("교환 전 a : %d, b : %d\n", a, b);
+
+	swap(); // 전역 변수 a와 b 치환
+	printf("교환 후 a : %d, b : %d\n", a, b);
+
+	return 0;
+}
+void swap(void)
+{
+	// 전역 변수 a 와 b 치환
+	// 전역 변수 : 모든 함수에서 바라볼 수 있다.
+	int temp;
+	temp = a;
+	a = b;
+	b = temp;
+}
+#endif
+
+/***********************************************************/
+// [14-0] 2차원 배열 사용 이유
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	// 자료구조 -> 배열
+	
+	// 국 영 수 과
+	int score1[4] = { 10,20,30,40 };
+	int score2[4] = { 20,30,40,50 };
+	int score3[4] = { 30,40,50,60 };
+
+	// 전체 국어 점수의 총합
+	int total_kor = score1[0] + score2[0] + score3[0];
+
+	int scores[3][4] = {score1, score2, score3};
+	// 첫 번째 사람의 영어 점수 -> score[1]
+	// scores[0][1]
+	return 0;
+}
+#endif
+
+// 이거 왜 안됨? 다시 확인해보기 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+/***********************************************************/
+// [14-1] 네 과목의 총점과 평균 
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	// 국 영 수 과
+	int scores[3][4] = {
+		{72, 80, 95, 60}, // 첫 번째 사람의 각 과목 점수
+		{68, 98, 83, 90}, // 두 번째 사람의 각 과목 점수
+		{75, 72, 84, 90}, // 세 번째 사람의 각 과목 점수
+	};
+	// 두 번째 사람의 3번 과목 -> scores[1][2]
+	
+	// 첫 번째 사람의 총점 :
+	// 두 번째 사람의 총점 : 
+	// 세 번째 사람의 총점 : 
+	int total[3] = { 0 };
+	double avg[3] = { 0 };
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			total[i] += scores[i][j];
+			avg[i] = (double)(total[j] / 4);
+		}
+		
+		printf("%d번째 사람의 총점 : %d\n", i + 1, total[i]);
+		printf("%d번째 사람의 평균 : %.lf점\n", i + 1, avg[i]);
+	}
+
+
+
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [14-1] 네 과목의 총점과 평균 
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	// 국 영 수 과
+	int scores[3][4] = {
+		{72, 80, 95, 60}, // 첫 번째 사람의 각 과목 점수
+		{68, 98, 83, 90}, // 두 번째 사람의 각 과목 점수
+		{75, 72, 84, 90}, // 세 번째 사람의 각 과목 점수
+	};
+	// 두 번째 사람의 3번 과목 -> scores[1][2]
+
+	// 첫 번째 사람의 총점 :
+	// 두 번째 사람의 총점 : 
+	// 세 번째 사람의 총점 : 
+	int total;
+	double avg;
+
+	for (int j = 0; j < 3; j++)
+	{
+		total = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			total += scores[j][i];
+		}
+		avg = (double)total / 4;
+		printf("%d번째 사람의 총점 : %d점\n", j + 1, total);
+		printf("%d번째 사람의 평균 : %.1lf점\n", j + 1, avg);
+
+		// 총 12개의 데이터
+		// [3][4] : 3행 4열
+		// 7번째 데이터의 행, 열의 index는 어떻게 되는가?
+		// scores[1][2]
+		// 1 ~ 4 -> 열 인덱스 0
+		// 5 ~ 8 -> 열 인덱스 1
+		// 9 ~ 12 -> 열 인덱스 2
+		// 0 ~ 3 -> 1자리
+		// 4 ~ 7 -> 2자리
+		// like 4진수
+		// 7 - 1 / 4
+		 
+		// 1번째 데이터 열 index -> 0
+		// 2번째 데이터 열 index -> 1
+		// 3번째 데이터 열 index -> 2
+		// 4번째 데이터 열 index -> 3
+		// 5번째 데이터 열 index -> 0
+		// (7 - 1) % 4
+		 
+		// n번째 데이터의 행 index -> (n - 1) / 열의 개수
+		// n번째 데이터의 열 index -> (n - 1) % 열의 개수
+
+	}
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [14-2] scanf를 통한 2차원 배열 초기화
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int scores[3][4];
+
+	// 입력부
+	for (int i = 0; i < 3; i++)
+	{
+		printf("%d번째 사람의 점수 입력 : ", i+1);
+		for (int j = 0; j < 4; j++)
+		{
+			scanf("%d", &scores[i][j]);
+		}
+	}
+	// 출력부
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			printf("%5d ", scores[i][j]);
+		}
+		printf("\n");
+	}
+	
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [14-연습] 2차원 배열 부수기
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void input_2d_array(int pa[5][5]);
+void input_2d_array2(int pa[5][5]);
+
+void print_2d_array(int* pa); // int pa[5][5] 도가능
+void print_2d_array2(int* pa);
+void print_2d_array3(int* pa);
+void print_2d_array4(int* pa);
+void print_2d_array5(int* pa);
+void print_2d_array6(int* pa);
+void print_2d_array7(int* pa);
+
+int main(void)
+{
+	int array[5][5];
+
+	int array2[10][3];
+	// 행의 개수 : 10
+	// 열의 개수 : 3
+	// array2를 통해서 -> 10
+	// array2 : 120byte
+	// array2[0] : 12byte
+
+	sizeof(array2); //120byte
+	sizeof(array2[0]); // 12byte
+	sizeof(int); // 4byte
+
+	int row = sizeof(array2) / sizeof(array2[0]);
+	int column = sizeof(array2[0]) / sizeof(int);
+
+	//입력부1
+	//input_2d_array(array);
+
+	//입력부2
+	input_2d_array2(array);
+
+	//출력부1
+	print_2d_array(array);
+
+	printf("\n");
+
+	//출력부2
+	print_2d_array2(array);
+
+	printf("\n");
+	
+	//출력부3
+	print_2d_array3(array);
+
+	printf("\n");
+
+	//출력부4
+	print_2d_array4(array);
+
+	printf("\n");
+
+	//출력부5
+	print_2d_array5(array);
+
+	printf("\n");
+
+	//출력부6
+	print_2d_array6(array);
+
+	printf("\n");
+
+	//출력부7
+	print_2d_array7(array);
+
+	return 0;
+}
+
+//입력
+// 5x5에 1 ~ 25까지 데이터 추가!!
+void input_2d_array(int pa[5][5])
+{
+	int count = 1;
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			pa[i][j] = count++;
+		}
+	}
+}
+// 5x5에 21 ~ 45까지 데이터 추가!!
+void input_2d_array2(int pa[5][5])
+{
+	int count = 21;
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			pa[i][j] = count++;
+		}
+	}
+}
+
+//출력
+void print_2d_array(int pa[5][5])
+{
+	// pointer
+	// pa -> array[0]
+	// pa + 1 -> array[1]
+	// ((pa + 2) + 3) array[2][3]
+
+	// 매개변수에 int pa[5][5]
+	// 매개변수에 int pa[][5]
+	// 매개변수에 int pa[]
+
+	// pa는 5x5 2차원 배열
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			printf("%3d", pa[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+void print_2d_array2(int pa[5][5])
+{
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			printf("%3d", pa[j][i]);
+		}
+		printf("\n");
+	}
+}
+
+void print_2d_array3(int pa[5][5])
+{
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 4; j >= 0; j--)
+		{
+			printf("%3d", pa[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+void print_2d_array4(int pa[5][5])
+{
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 4; j >= 0; j--)
+		{
+			printf("%3d", pa[j][i]);
+		}
+		printf("\n");
+	}
+}
+
+void print_2d_array5(int pa[5][5])
+{
+	for (int i = 4; i >= 0; i--)
+	{
+		for (int j = 4; j >= 0; j--)
+		{
+			printf("%3d", pa[j][i]);
+		}
+		printf("\n");
+	}
+}
+
+void print_2d_array6(int pa[5][5])
+{
+	for (int i = 0; i < 5; i++)
+	{
+		if (i % 2 == 0)
+		{
+			for (int j = 0; j < 5; j++)
+			{
+				printf("%3d", pa[i][j]);
+			}
+			printf("\n");
+		}
+		else
+		{
+			for (int j = 4; j >= 0; j--)
+			{
+				printf("%3d", pa[i][j]);
+			}
+			printf("\n");
+		}
+	}
+
+
+}
+
+void print_2d_array7(int pa[5][5])
+{
+	for (int i = 0; i < 5; i++)
+	{
+		if (i % 2 == 1)
+		{
+			for (int j = 0; j < 5; j++)
+			{
+				printf("%3d", pa[i][j]);
+			}
+			printf("\n");
+		}
+		else
+		{
+			for (int j = 4; j >= 0; j--)
+			{
+				printf("%3d", pa[i][j]);
+			}
+			printf("\n");
+		}
+	}
+
+
+}
+
+#endif
+
+/***********************************************************/
+// [14-3] 여러 마리의 동물을 입출력!!
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	char animal[5][20];
+	int row = sizeof(animal) / sizeof(animal[0]); // 100 / 20 = 5
+
+	for (int i = 0; i < row; i++)
+	{
+		scanf("%s", animal[i]);
+	}
+
+	for (int i = 0; i < row; i++)
+	{
+		printf("%s ", animal[i]);
+	}
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [14-4] 포인터 배열로 여러개의 문자열 출력
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	// 화장실갔다옴
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [14-5] 포인터 배열을 통해 int 2차원도 1차원처럼 써보자
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int ary1[4] = { 10, 20, 30, 40 };
+	int ary2[4] = { 11, 21, 31, 41 };
+	int ary3[4] = { 12, 22, 32, 42 };
+
+	int* pary[3] = { ary1, ary2, ary3 };
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			printf("%3d", pary[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [14-도전] 가로 세로의 합 구하기
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int array[5][6] = { 0 };
+	
+	// 입력부
+	int count = 1;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (i < 4 && j < 5)
+			{
+				array[i][j] = count++;
+			}
+			
+		}
+	}
+	// 논리부
+	int total_row; // 행의 합 저장하는 변수
+	int total_col; // 열으 합
+	int i, j;
+	// 1. 행의 합 구해서 대입!!
+	for (i = 0; i < 5; i++)
+	{
+		total_row = 0;
+		for (j = 0; j < 5; j++)
+		{
+			total_row += array[i][j];
+		}
+		array[i][j] = total_row;
+	}
+	// 2. 열의 합 구해서 대입!!
+	for (i = 0; i < 5; i++)
+	{
+		total_col = 0;
+		for (j = 0; j < 4; j++)
+		{
+			total_col += array[j][i];
+		}
+		array[j][i] = total_col;
+	}
+	// 3. 모든 값 더해서 array[4][5]에 대입
+	int total = 0;
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 5; j++)
+		{
+			total += array[i][j];
+		}
+	}
+	array[i][j] = total;
+
+	// 출력부
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			printf("%3d", array[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [백준-2738] 행렬 덧셈
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	int arr_a[100][100] = { 0 };
+	for(int i=0; i<n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			scanf("%d", &arr_a[i][j]);
+		}
+	}
+
+	int arr_b[100][100] = { 0 };
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			scanf("%d", &arr_b[i][j]);
+		}
+	}
+
+	
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			printf("%d ", arr_a[i][j] + arr_b[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [백준-2566] 최댓값
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int array[9][9] = { 0 };
+	//입력
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			scanf("%d", &array[i][j]);
+		}
+	}
+	//최댓값
+	int max = 0;
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			if(max<array[i][j])
+				max = array[i][j];
+		}
+	}
+	printf("%d\n", max);
+
+	// 두개 이상 일 시 위치 찾기
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			if (max == array[i][j])
+				printf("%d %d\n", i+1, j+1);
+		}
+	}
+	return 0;
+}
+#endif
+
+
