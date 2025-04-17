@@ -4953,4 +4953,860 @@ int main(void)
 }
 #endif
 
+// 4月17日(木)
+/***********************************************************/
+// [15-1] 이중 포인터
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int a = 10;
+	int* pi = &a;
+	int** ppi = &pi;
+
+	// pppi-> ppi의 주소 300번지
+	// *pppi -> 200번지
+	// **pppi -> 100번지
+	// ***pppi -> 10
+	int*** pppi = &ppi;
+
+	printf("%d\n", sizeof(pi));
+
+	printf("%d\n", a); // 10
+	printf("%p\n", pi); // a의 주소 -> 100번지
+	printf("%d\n", *pi); // 10 : 100번지를 찾아가서 값을 참조
+	printf("%p\n", ppi); // pi의 주소 -> 200번지
+	printf("%p\n", *ppi); //a의주소 -> 100번지
+	printf("%d\n", **ppi); // 10 : (200번지를 찾아가서 값을 참조)번지를 찾아가서 값을 참조 -> 주소의 주소
+
+
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [15-2] 이중 포인터를 활용한 문자열 교환
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void swap_pointer(char** pa, char** pb);
+
+int main(void)
+{
+	char* pa = "success";
+	char* pb = "failure";
+
+	printf("pa -> %s, pb -> %s\n", pa, pb);
+	swap_pointer(&pa, &pb);
+	printf("pa -> %s, pb -> %s\n", pa, pb);
+
+	return 0;
+}
+
+void swap_pointer(char** ppa, char** ppb)
+{
+	// 이전에
+	// int a, b; -> swap
+	// swap(&a, &b)
+	// swap(int *pa, int *pb);
+	// int temp;
+	int *temp;
+	temp = *ppa;
+	*ppa = *ppb;
+	*ppb = temp;
+	// 
+	// *pa = temp;
+	// *pb = *pa;
+	// *pa = temp;
+}
+#endif
+
+/***********************************************************/
+// [15-3] 포인터 배열
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void print_str(char** ppa, int size);
+
+int main(void)
+{	
+	char* animal = { "dog" };
+	printf("%s\n", animal);
+
+	char* animals[4] = { "dog", "cat", "hippo", "snake" };
+	// animals : 문자열(배열) 배열
+	print_str(animals, 4);
+
+
+	return 0;
+}
+
+void print_str(char** ppa, int size)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		printf("%s\n", ppa[i]);
+	}
+}
+#endif
+
+/***********************************************************/
+// [15-4] 배열의 주소??
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int array[5];
+	printf("%u\n", array); // array의 주소 (0번 인덱스 주소)
+	printf("%u\n", &array); // array의 주소값
+	printf("%u\n", array + 1); // 1번 인덱스의 주소
+	//printf("%u\n", &array + 1);
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [15-5] 배열 포인터로 5x5 출력
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void print_array(int** ppa);
+
+int main(void)
+{
+	int array[5][5];
+	int count = 1;
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			array[i][j] = count++;
+		}
+			
+	}
+	print_array(array);
+
+
+	return 0;
+}
+
+void print_array(int** ppa) // **ppa 대신 (*pa)[5]도 가능
+{
+	int(*pa)[5] = ppa;
+
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			printf("%3d", pa[i][j]);
+		}
+		printf("\n");
+	}
+}
+#endif
+
+/***********************************************************/
+// [15-7] 함수 포인터를 사용한 함수 호출
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int sum(int a, int b);
+
+int main(void)
+{
+	int result;
+	result = sum(10, 20);
+	printf("%d\n", result); // 30
+
+	int(* fp)(int, int); // 우선순위 주의
+	fp = sum;
+	int result2 = fp(20, 30);
+	
+	printf("%d\n", result2);
+
+	int result3 = (*sum)(30, 40);
+	printf("%d\n", result3);
+
+	return 0;
+}
+
+int sum(int a, int b)
+{
+	return a + b;
+}
+#endif
+
+/***********************************************************/
+// [15-8] 깔끔한 계산 프로그램 만들기
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int sum(int a, int b);
+int mul(int a, int b);
+int max(int a, int b);
+int sub(int a, int b);
+
+void func(int (*fp)(int a, int b));
+
+int main(void)
+{
+	printf("1 두 정수의 합\n");
+	printf("2 두 정수의 곱\n");
+	printf("3 두 정수중에서 큰 값 계산\n");
+	printf("4 두 정수의 차\n");
+	printf("원하는 연산을 선택하세요 : ");
+
+	int menu;
+	scanf("%d", &menu);
+
+	switch (menu)
+	{
+	case 1: func(sum);
+		break;
+	case 2: func(mul);
+		break;
+	case 3: func(max);
+		break;
+	case 4: func(sub);
+		break;
+	default: return -1;
+	}
+	return 0;
+}
+
+int sum(int a, int b)
+{
+	return a + b;
+}
+int mul(int a, int b)
+{
+	return a * b;
+}
+int max(int a, int b)
+{
+	return a > b ? a : b;
+}
+int sub(int a, int b)
+{
+	return a > b ? a - b : b - a;
+}
+
+void func(int (*fp)(int a, int b))
+{
+	// sum을 넘기면 fp를 sum처럼 쓸 수 있다.
+	printf("두 정수의 값을 입력하세요 : ");
+	int a, b;
+	scanf("%d %d", &a, &b);
+
+	int result;
+	result = fp(a, b);
+
+	printf("결과값은 : %d\n", result);
+}
+#endif
+
+/***********************************************************/
+// [15-9] void 포인터 
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+int main(void)
+{
+	int a = 10;
+	double b = 3.14;
+
+	void* vp;
+	vp = &a; // void포인터는 형변환 무조건 해줘야
+	printf("%d\n", *((int*)vp));
+
+	vp = &b;
+	printf("%.2lf\n", * ((double*)vp));
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [16-1] 동적 할당을 활용한 배열 생성
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+	int N;
+	printf("배열의 크기를 입력하세요 : ");
+	scanf("%d", &N); //5
+
+	// 5칸짜리 int형 배열 -> 20byte
+	// int array[5]; // 20byte할당
+	// malloc : 동적 할당
+	// N * sizeof(int) // N개 x 4byte 만큼 할당
+	// (int*)-> void pointer 를 casting해서 사용하자
+
+	//void* vp = malloc(N * sizeof(int));
+	//int* array = ((int*)vp);
+	int* array = (int*)malloc(N * sizeof(int));
+
+	//만약, 할당할 여유 공간(메모리)이 없다면 (임베디드 시스템에서 필수)
+	if (array == NULL)
+	{
+		printf("메모리가 부족합니다ㅠㅠ\n");
+		exit(1); // 프로그램 종료 stdlib.h 함수
+
+	}
+
+	// N : 5
+	/*
+	int count = 1;
+
+	for (int i = 0; i < N; i++)
+	{
+		arry[i] = count++;
+		printf("%3d", array[i]);
+	}
+	*/  //권장하진 않음 다른 로직 구현할 때 안됨
+
+	for (int i = 0; i < N; i++) array[i] = count++;
+	for (int i = 0; i < N; i++) printf("%3d", array[i]);
+
+	//동적 할당 해제 
+	//해제 안해주면 그대로 남음 점점 쓸 공간 부족해짐
+	free(array);
+	// 단, 해제한 이후 더이상 array를 출력할 수 없다.
+	// 쓰레기값 출력됨, 잘못되면 강제종료 될수도
+
+
+	return 0;
+
+}
+#endif
+
+/***********************************************************/
+// [16-2] 연속 할당과 재할당
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+	int N;
+	printf("배열의 크기를 입력하세요 : ");
+	scanf("%d", &N); //5
+
+	// calloc -> 초기화 : 0
+
+	int* array = (int*)calloc(N, sizeof(int));
+
+	if (array == NULL)
+	{
+		printf("메모리 부족");
+		exit(1);
+	}
+
+	int count = 1;
+	for (int i = 0; i < N; i++)
+	{
+
+		array[i] = count++;
+	}
+	for (int i = 0; i < N; i++)
+	{
+		printf("%3d", array[i]);
+	}
+
+	printf("\n");
+
+	// N : 20 -> N : 30
+	int M;
+	printf("재조정할 배열의 크기 입력 : ");
+	scanf("%d", &M);
+	array = (int*)realloc(array, M * sizeof(int));
+
+
+	for (int i = N; i < M; i++)
+	{
+		array[i] = count++;
+	}
+
+	for (int i = 0; i < M; i++)
+	{
+		printf("%3d", array[i]);
+	}
+
+	free(array); // 메모리 누수 방지를 위한 점유 해제
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [16-4] 3개의 문자열을 저장하기 위한 동적 할당
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main(void)
+{
+	// 3개의 문자열 -> input
+	// 각 문자열의 길이 모른다
+	char* str[3]; // 각 문자열을 담을 3개 공간
+	char temp[46] = { '\0', };
+	for (int i = 0; i < 3; i++)
+	{
+		gets(temp); // temp : rabbit 
+		str[i] = (char*)malloc(strlen(temp) + 1);
+		strcpy(str[i], temp);
+		if (str[i] == NULL)
+		{
+			printf("메모리 부족");
+			exit(1);
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		printf("%s ", str[i]);
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		free(str[i]);
+	}
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [16-5] 몇 개??? 를 받아 문자열 출력
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+#include <string.h> // 문자열 
+#include <stdlib.h> // 동적 할당
+
+int main(void)
+{
+	// 사용자가 문자열을 입력
+	// 몇 개 입력할 지 모름
+	// 최대 20개 까지만입력받도록 설계
+	char* str[21];
+	char temp[46];
+	
+	for (int i = 0; i < 20; i++)
+	{
+		printf("문자열을 입력하세요 : ");
+		gets(temp);
+		if (strcmp(temp, "end") == 0)
+		{
+			break;
+		}
+		str[i] = (int*)malloc(strlen(temp) + 1);
+
+		if (str[i] == NULL)
+		{
+			printf("메모리 부족");
+			exit(1);
+		}
+
+		strcpy(str[i], temp);
+	}
+	
+	for (int i = 0; i < 20; i++)
+	{
+		if (str[i] != NULL)
+		{
+			printf("%s\n", str[i]);
+		}
+		printf("%s\n", str[i]);
+	}
+
+	for (int i = 0; str[i] != NULL; i++)
+	{
+		free(str[i]);
+	}
+	return 0;
+}
+
+#endif
+
+/***********************************************************/
+// [16-5] 몇 개??? 를 받아 문자열 출력 함수구현
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+#include <stdlib.h> // 동적할당
+#include <string.h> // strcpy, strlen
+
+void print_array(char** ppa); // 크기 던저야할까요? 안해도됨 > char이어서
+int main(void)
+
+{
+	//사용자가 문자열을 입력
+	// 몇개 입력할지 모름
+	// 최대 20개까지만 입력하도록 설계
+	char* str[21];
+	char temp[46];
+
+	// 입력받아서 str[i]에 저장하는구문
+	for (int i = 0;i < 20;i++) 
+	{
+		printf("문자열을 입력하세요 :");
+		gets(temp);
+		if (strcmp(temp, "end") == 0) break;
+		str[i] = (int*)malloc(strlen(temp) + 1);
+
+		if (str[i] == NULL) exit(1);
+
+		strcpy(str[i], temp);
+	}
+	//출력
+	print_array(str);
+
+	for (int i = 0;i < 20;i++) 
+	{
+		free(str[i]);
+	}
+
+	return 0;
+}
+void print_array(char** ppa)
+{
+	while (*ppa) printf("%s\n", *ppa++);
+}
+
+#endif
+
+/***********************************************************/
+// [16-6] 명령 프롬프트 인자를 출력하는 프로그램
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc,char **argv)
+{
+	// 수정 후 Ctrl+Shift+B
+	printf("Hello World!!\n");
+	/*for (int i = 0; i < argc; i++)
+	{
+		printf("%s\n", argv[i]);
+	}*/
+	
+	int size = atoi(argv[1]);
+
+
+
+	for (int i = 1; i < size; i++)
+	{
+		for (int j = 0; j < i; j++)
+		{
+			printf("*");
+		}
+		printf("\n");
+	}
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [17-1] 구조체 선언 및 사용
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+// 구조체 선언!! (반드시 main앞에)
+struct contact
+{
+	// 멤버
+	// 자료형 멤버명;
+	char* name; // 이름
+	int age; // 나이
+	char* mbti; // MBTI
+};
+
+struct student
+{
+	char ch1;
+	short num;
+	char ch2;
+	int score;
+	double grade;
+	char ch3;
+};
+
+struct exam
+{
+	char c1;
+	int num;
+};
+
+int main(void)
+{
+	struct contact p1;
+	struct contact p2;
+	struct contact p3;
+
+	struct student s1;
+
+	struct exam e1;
+	printf("e1의 크기 : %d\n", sizeof(e1));
+	printf("s1의 크기 : %d\n", sizeof(s1));
+	
+	// .(~의, 안에)
+	p1.name = "정 태윤";
+	p1.age = 24;
+	p1.mbti = "ISTP";
+
+	p2.name = "리오넬 메시";
+	p2.age = 37;
+	p2.mbti = "GOAT";
+
+	p3.name = "오타니 쇼헤이";
+	p3.age = 30;
+	p3.mbti = "GOAT";
+
+	// 구조체 -> 설계도
+
+	printf("이름 : %s, 나이 : %d세, MBTI : %s\n", p1.name, p1.age, p1.mbti);
+	printf("이름 : %s, 나이 : %d세, MBTI : %s\n", p2.name, p2.age, p2.mbti);
+	printf("이름 : %s, 나이 : %d세, MBTI : %s\n", p3.name, p3.age, p3.mbti);
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [17-2] 멤버의 자료형
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+struct student
+{
+	// 학번, 학점 정보 추가
+	int id;
+	double grade;
+};
+
+struct profile
+{
+	char name[20]; // 이름
+	int age;       // 나이
+	double height; // 키
+	char* intro;   // 자기소개
+
+	struct student st; //학생 관련 정보
+
+};
+int main(void)
+{
+	// 자기소개 문구를 입력 받아 intro에 대입
+	struct profile p1;
+	// strcpy()
+	strcpy(p1.name, "선동렬");
+	
+	p1.age = 20;
+	p1.height = 600;
+	// 자기소개 문구를 입력 받아 info에 대입
+	printf("자기소개 : ");
+	// 임시 저장 공간
+	char temp[80];
+	gets(temp);
+
+	p1.intro = (char*)malloc(strlen(temp) + 1);
+	strcpy(p1.intro, temp);
+
+	p1.st.id = 2019;
+	p1.st.grade = 1.20;
+
+
+	printf("이름 : %s, 나이 : %d세, 키 : %.1lfcm\n", p1.name, p1.age, p1.height);
+	printf("자기소개 : %s\n", p1.intro);
+	printf("학번 : %d, 학점 : %.2lf\n", p1.st.id, p1.st.grade);
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [17-3] 최고 학점의 학생 데이터 출력
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+struct student
+{
+	int id; //학번
+	char name[20]; // 이름
+	double grade; // 학점
+};
+
+int main(void)
+{
+	// 구조체선언과 동시에 초기화
+	struct student s1 = { 315, "선동렬", 1.2 },
+					s2 = { 316, "김광현", 3.7 },
+					s3 = { 317, "게릿콜", 3.2 };
+
+	// s1, s2, s3의 학점을 탐색하면서
+    // 가장 높은 학점을 가지고 있는 사람의
+    // 다음과 같이 학번, 이름, 학점을 출력
+    // 학번 : ???, 이름 : ???, 학점 : ???
+
+
+	// 첫 번째 가장 높은 학점이다!!
+	// 가장 높은 구조체 -> max
+	// 구조체는 결국 자료형(사용자 정의된)
+	// 기본 자료형 끼리는 대입 연산자 사용 가능
+	// 초기화 이후에 대입 가능하다~!!
+	struct student max = s1;
+
+	if (s2.grade > max.grade)
+	{
+		max = s2;
+	}
+	if (s3.grade > max.grade)
+	{
+		max = s3;
+	}
+	printf("학번 : %d, 이름 : %s, 학점 : %.1lf\n", max.id, max.name, max.grade);
+
+	/*double max = 0;
+	int max_index = 0;
+	if (s1.grade > max)
+	{
+		max = s1.grade;
+		max_index++;
+	}
+	if (s2.grade > max)
+	{
+		max = s2.grade;
+		max_index++;
+	}
+	if (s3.grade > max)
+	{
+		max = s3.grade;
+		max_index++;
+	}
+	switch (max_index)
+	{
+	case 1: printf("학번 : %d, 이름 : %s, 학점 : %.1lf\n", s1.id, s1.name, s1.grade);
+		break;
+	case 2: printf("학번 : %d, 이름 : %s, 학점 : %.1lf\n", s2.id, s2.name, s2.grade);
+		break;
+	case 3: printf("학번 : %d, 이름 : %s, 학점 : %.1lf\n", s3.id, s3.name, s3.grade);
+		break;
+	}*/
+	
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [17-6] 구조체 포인터와 간접 멤버 접근 연산자
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+struct score
+{
+	int kor;
+	int eng;
+	int math;
+};
+
+int main(void)
+{
+	struct score s1 = { 70, 80, 90 };
+	struct score* ps = &s1;
+
+	printf("국어 : %d점\n", s1.kor);
+	printf("영어 : %d점\n", (*ps).eng);
+	printf("수학 : %d점\n", ps->math); // -> : 간접 멤버 접근 연산자
+
+
+	return 0;
+}
+#endif
+
+/***********************************************************/
+// [17-7] 구조체 배열
+/***********************************************************/
+
+#if 1
+#include <stdio.h>
+void print_list(struct student* lp, int size);
+
+struct student
+{
+	int id; //학번
+	char name[20]; // 이름
+	double grade; // 학점
+};
+
+int main(void)
+{
+	// 구조체선언과 동시에 초기화
+	struct student students[3] = {
+		{ 315, "선동렬", 1.2 },
+		{ 316, "김광현", 3.7 },
+		{ 317, "구창모", 3.6 }
+	};
+
+	print_list(students, 3);
+
+	// 3명의 정보를 다음과 같이 3행으로 출력
+    // 학번 : 315, 이름 : 홍길동, 학점 : 2.4
+    // 학번 : 316, 이름 : 임꺽정, 학점 : 3.7
+    // 학번 : 317, 이름 : 심청이, 학점 : 4.5
+
+	
+	return 0;
+}
+
+void print_list(struct student* lp, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		printf("학번 : %d, 이름 : %s, 학점 : %.1lf\n", lp[i].id, (*(lp+i)).name, (lp + i)->grade);
+	}
+}
+#endif
+
 
