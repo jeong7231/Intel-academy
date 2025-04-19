@@ -2449,6 +2449,8 @@ int main(void)
 	//num1 = num2;
 	//num2 = temp;
 
+	int array[100];
+
 	for (int j = 5;j > 0;j--)
 	{
 		for (int i = 0;i < 6;i++)
