@@ -55,7 +55,8 @@ int main(int argc, char* argv[])
         if (result > 0) 
         {
             //  ---------------------- select fd:stdin_sd------------------------
-            if (FD_ISSET(stdin_fd, &reads)) {
+            if (FD_ISSET(stdin_fd, &reads)) 
+            {
                 if (fgets(message, sizeof(message), stdin) == NULL)
                     break;
 
