@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
         // timeout.tv_usec = 0;
 
         // int result = select(max_fd, &reads, 0, 0, &timeout);
-        int result = select(max_fd, &reads, 0, 0, 0);
+        int result = select(max_fd, &reads, NULL, NULL, NULL);
 
         if (result > 0)
         {
