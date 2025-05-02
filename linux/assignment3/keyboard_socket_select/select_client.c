@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
                 //fputs("enter message : ", stdout);
                 fgets(message, sizeof(message), stdin);
 
-                if(message == NULL) 
+                if(message == NULL)
                     break;
 
                 str_len = strlen(message)-1;
@@ -104,14 +104,14 @@ int main(int argc, char* argv[])
             //  -----------------------------------------------------------------
         }
 
-        else if (result == 0)
-        {
-            fputc('\n', stderr);
-            fputs("Time out!!!", stderr);
-            fputc('\n', stderr);
+        // else if (result == 0)
+        // {
+        //     fputc('\n', stderr);
+        //     fputs("Time out!!!", stderr);
+        //     fputc('\n', stderr);
 
-            fputs("문자열을 입력하세요(quit:종료) : ", stderr);
-        }
+        //     fputs("문자열을 입력하세요(quit:종료) : ", stderr);
+        // }
 
         else
             error_handling("select() error");
@@ -128,5 +128,4 @@ void error_handling(char *message)
     fputs(message, stderr);
     fputc('\n', stderr);
     exit(1);
-}
-
+} 
