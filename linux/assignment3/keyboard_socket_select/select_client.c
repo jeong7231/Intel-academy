@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
         struct timeval timeout;
         timeout.tv_sec = 5;
         timeout.tv_usec = 0;
-
+        
         int result = select(max_fd, &reads, 0, 0, &timeout);
 
         if (result > 0) 
@@ -84,11 +84,7 @@ int main(int argc, char* argv[])
                 } 
                 
                 else if (str_len == 0)
-                {
-                    printf("\n");
-                
                     break;
-                }
                 
                 else 
                     error_handling("read() error!");
@@ -115,3 +111,5 @@ void error_handling(char *message)
     fputc('\n', stderr);
     exit(1);
 }
+
+
