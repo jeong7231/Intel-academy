@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 {
     struct sockaddr_in serv_addr;
     // int stdin_fd=fileno(stdin);
-	// printf("stdin_fd : %d\n",stdin_fd);
+    // printf("stdin_fd : %d\n",stdin_fd);
 
     if(argc!=3)
     {
