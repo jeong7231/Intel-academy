@@ -302,7 +302,7 @@ void load_file(const char* filename, CLIENT_INFO* client_info, int max_clients)
     {
     int return_fsanf = fscanf(fp, "%s %s", client_info[index].id, client_info[index].pw);
 
-    if (return_fsanf == EOF) 
+    if (return_fsanf == EOF || index >= MAX_CLNT) 
         break;  
 
     index++;
