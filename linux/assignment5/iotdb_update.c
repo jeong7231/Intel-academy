@@ -35,7 +35,6 @@ int main(int argc, char **argv)
         printf("Usage : %s id temp humi\n",argv[0]);
         return 1;
     }
-      
         id = atoi(argv[1]);
         illu = atoi(argv[2]);
         temp = atof(argv[3]);
@@ -46,14 +45,11 @@ int main(int argc, char **argv)
         finish_with_error(con);
     }
 
-    
-   
-  
-    sprintf(sql_cmd, "update sensor set illu=%d, temp=%f, humi=%f where id=%d", illu, temp, humi, id);
+    sprintf(sql_cmd, "update sensor set date=now(), time=now(), illu=%d, temp=%f, humi=%f where id=%d", illu, temp, humi, id);
 
     res = mysql_query(con, sql_cmd);
     if (!res)
-        printf("inserted %lu rows\n", (unsigned long)mysql_affected_rows(con));
+        printf("upgraded id %d \n", id);
     else
     {
         fprintf(stderr, "ERROR: %s[%d]\n", mysql_error(con), mysql_errno(con));
