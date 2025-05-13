@@ -32,11 +32,10 @@ int main(int argc, char **argv)
 
     if(argc != 5)
     {
-        // printf("Usage : %s sensorId illu temp humi\n",argv[0]);
         printf("Usage : %s id temp humi\n",argv[0]);
         return 1;
     }
-        //strcpy(sensorId,argv[1]);
+      
         id = atoi(argv[1]);
         illu = atoi(argv[2]);
         temp = atof(argv[3]);
@@ -47,9 +46,9 @@ int main(int argc, char **argv)
         finish_with_error(con);
     }
 
-    //sprintf(sql_cmd, "insert into sensor(name, date, time,illu, temp, humi) values(\"%s\",now(),now(),%d,%f,%f)",sensorId, illu, temp, humi);
-    //sprintf(sql_cmd, "update sensor set(illu=%d, temp=%f, humi=%f) where sensorId=%d", illu, temp, sensorId);
-    //sprintf(sql_cmd, "update sensor set illu=%d, temp=%f, humi=%f where sensorId=%d", illu, temp, humi, sensorId);
+    
+   
+  
     sprintf(sql_cmd, "update sensor set illu=%d, temp=%f, humi=%f where id=%d", illu, temp, humi, id);
 
     res = mysql_query(con, sql_cmd);
