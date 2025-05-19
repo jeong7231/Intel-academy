@@ -18,13 +18,13 @@ void setup()
  rtc.writeProtect(false); // 시간 변경이 가능하도록 설정
  
  Serial.begin(115200); // 시리얼 통신 초기화
- Serial.println("Arduino Examples - RealTime Clock DS1302");
- Serial.println(" http://docs.whiteat.com/?p=2171");
+//  Serial.println("Arduino Examples - RealTime Clock DS1302");
+//  Serial.println(" http://docs.whiteat.com/?p=2171");
 
 
- rtc.setDOW(FRIDAY); // SUNDAY 로 설정
- rtc.setTime(17, 00, 30); // 시간을 12:00:00로 설정 (24시간 형식)
- rtc.setDate(16, 5, 2025); // 2015년 8월 16일로 설정
+//  rtc.setDOW(FRIDAY); // SUNDAY 로 설정
+//  rtc.setTime(17, 46, 00); // 시간을 12:00:00로 설정 (24시간 형식)
+//  rtc.setDate(16, 5, 2025); // 2015년 8월 16일로 설정
 }
 
 void loop()
