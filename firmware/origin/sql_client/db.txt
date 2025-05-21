@@ -1,0 +1,48 @@
+//[KSH_SQL]GETDB@LAMP
+//[KSH_SQL]SETDB@LAMP@ON
+//[KSH_SQL]SETDB@LAMP@ON@KSH_LIN
+		if(!strcmp(pArray[1],"GETDB") && i == 3)
+		{
+			sprintf(sql_cmd, "SELECT value FROM device where name=\'%s\'",pArray[2]);
+			
+			if (mysql_query(conn, sql_cmd)) 
+			{
+				fprintf(stderr, "%s\n", mysql_error(conn));
+				break;
+			}
+			MYSQL_RES *result = mysql_store_result(conn);
+			if (result == NULL) 
+			{
+				fprintf(stderr, "%s\n", mysql_error(conn));
+				break;
+			}
+
+			int num_fields = mysql_num_fields(result);
+//            printf("num_fields : %d \n",num_fields);		
+
+			sqlrow = mysql_fetch_row(result);
+			
+			sprintf(sql_cmd,"[%s]%s@%s@%s\n",pArray[0],pArray[1],pArray[2],sqlrow[0]);
+		
+  			write(*sock, sql_cmd, strlen(sql_cmd));
+		}
+		else if(!strcmp(pArray[1],"SETDB")){
+  			sprintf(sql_cmd,"update device set value='%s', date=now(), time=now() where name='%s'",pArray[3], pArray[2]);
+
+
+			res = mysql_query(conn, sql_cmd);
+			if (!res)
+			{
+				if(i==4)
+					sprintf(sql_cmd,"[%s]%s@%s@%s\n",pArray[0],pArray[1],pArray[2],pArray[3]);
+				else if(i==5)
+					sprintf(sql_cmd,"[%s]%s@%s\n",pArray[4],pArray[2],pArray[3]);
+				else
+					continue;
+
+				printf("inserted %lu rows\n", (unsigned long)mysql_affected_rows(conn));
+  				write(*sock, sql_cmd, strlen(sql_cmd));
+			}
+			else
+				fprintf(stderr, "ERROR: %s[%d]\n", mysql_error(conn), mysql_errno(conn));
+		}
